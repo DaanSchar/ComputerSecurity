@@ -1,7 +1,5 @@
 package org.schar.cybersecurity.common.io;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
 import org.schar.cybersecurity.client.Client;
 
 import java.io.*;
@@ -9,16 +7,6 @@ import java.net.URISyntaxException;
 import java.util.Scanner;
 
 public class Utils {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    public static JsonNode parseJson(File file) throws FileNotFoundException, JsonProcessingException {
-        return parseJson(readFile(file));
-    }
-
-    public static JsonNode parseJson(String json) throws JsonProcessingException {
-        return objectMapper.readTree(json);
-    }
 
     public static String readFile(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
