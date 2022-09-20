@@ -6,10 +6,10 @@
     "port": "1234"
   },
   "actions": {
-    "delay": "DELAY IN SECONDS",
+    "delay": 2,
     "steps": [
-      "ACTION 1",
-      "ACTION 2"
+      "INCREASE 6",
+      "DECREASE 4"
     ]
   }
 }
