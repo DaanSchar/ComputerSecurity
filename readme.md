@@ -21,7 +21,7 @@ disconnects (except for the logs).
 * Run `./gradlew build` in your terminal.
 
 ## Run
-Example of how to run the client socket.
+Example of how to run the **Client** socket:
 ```
 public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         Client client = new Client("config/configuration.json"); // files are found inside the "resources" dir.
@@ -30,7 +30,7 @@ public static void main(String[] args) throws IOException, URISyntaxException, I
 }
 ```
 
-To run the server:
+To run the **Server** socket:
 ```
 public static void main(String[] args) throws IOException {
     Server server = new Server(1234); // pass in the port
