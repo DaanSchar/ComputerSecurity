@@ -1,0 +1,24 @@
+[23-09 12:56:18] [Server] Client connected.
+[23-09 12:56:18] [Server] Starting ClientHandler on a new thread.
+[23-09 12:56:18] [Server] Identified user with id: ID and password: PASSWORD.
+[23-09 12:56:18] [Server] Creating new user ID with password PASSWORD.
+[23-09 12:56:18] [Server] Client connected.
+[23-09 12:56:18] [Server] Starting ClientHandler on a new thread.
+[23-09 12:56:18] [Server] Identified user with id: user_example_id and password: example_password_123.
+[23-09 12:56:18] [Server] Creating new user user_example_id with password example_password_123.
+[23-09 12:56:20] [Server] ID performs action INCREASE with amount: 6.
+[23-09 12:56:20] [Server] new count of user ID = 6.
+[23-09 12:56:22] [Server] ID performs action DECREASE with amount: 4.
+[23-09 12:56:22] [Server] new count of user ID = 2.
+[23-09 12:56:22] [Server] user_example_id performs action INCREASE with amount: 12.
+[23-09 12:56:22] [Server] new count of user user_example_id = 12.
+[23-09 12:56:26] [Server] user_example_id performs action DECREASE with amount: 40.
+[23-09 12:56:26] [Server] new count of user user_example_id = -28.
+[23-09 12:56:30] [Server] user_example_id performs action DECREASE with amount: 12.
+[23-09 12:56:30] [Server] new count of user user_example_id = -40.
+[23-09 12:56:34] [Server] user_example_id performs action INCREASE with amount: 80.
+[23-09 12:56:34] [Server] new count of user user_example_id = 40.
+[23-09 12:56:38] [Server] user_example_id performs action DECREASE with amount: 3.
+[23-09 12:56:38] [Server] new count of user user_example_id = 37.
+[23-09 12:56:38] [Server] Client disconnected.
+[23-09 12:56:38] [Server] Client disconnected.
