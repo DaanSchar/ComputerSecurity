@@ -5,11 +5,13 @@ public class User {
     private final String password;
     private final String id;
     private int count;
+    private int totalConnected;
 
     public User(String id, String password) {
         this.id = id;
         this.password = password;
         this.count = 0;
+        this.totalConnected = 1;
     }
 
     public int getCount() {
@@ -24,11 +26,27 @@ public class User {
         return id;
     }
 
+    public int getTotalConnected() {
+        return totalConnected;
+    }
+
     public void increase(int amount) {
         this.count += amount;
     }
 
     public void decrease(int amount) {
         this.count -= amount;
+    }
+
+    public void connect() {
+        this.totalConnected += 1;
+    }
+
+    public void disconnect() {
+        this.totalConnected -= 1;
+    }
+
+    public boolean isDisconnected() {
+        return this.totalConnected <= 0;
     }
 }
