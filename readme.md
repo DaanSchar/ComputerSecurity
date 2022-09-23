@@ -16,7 +16,7 @@ disconnects (except for the logs).
 * Server logs are automatically written to `resources/logs/log.txt`. An example can be found in the same dir.
 
 ## Setup
-* Be sure you are running a recent version of Java (18) end Gradle (7.4).
+* Be sure you are have a recent version of **Java** (18) and **Gradle** (7.4) installed.
 * Unzip the file and open it in your favourite IDE.
 * Run `./gradlew build` in your terminal.
 
