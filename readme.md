@@ -7,13 +7,23 @@ The server allows the client to submit an id and password. if that same combinat
 are already connected, the client may have access to the same resources (count). The server will respond with a json
 saying if login was successful. Now that the client has logged in, it may now send actions to be performed on the server
 (`INCREASE`, `DECREASE`). The server will log the counter and actions performed. All data will be lost as soon as the client
-disconnects (except for the logs).
+disconnects (except for the logs). If there are multiple instances of the same client id connected, 
+only when all of them have been disconnected, will the data be deleted.
 
 ## System specifications
+
+### Features
 
 * The client can send messages to the server. They are read in the form of **json objects**.
 * The server is able to handle multiple clients at a time by handling each client on a different thread.
 * Server logs are automatically written to `resources/logs/log.txt`. An example can be found in the same dir.
+
+
+### Structure
+![Image from geeksforgeeks](https://media.geeksforgeeks.org/wp-content/uploads/JavaSocketProgramming.png)\
+source: https://www.geeksforgeeks.org/
+
+
 
 ## Setup
 * Be sure you are have a recent version of **Java** (18) and **Gradle** (7.4) installed.
