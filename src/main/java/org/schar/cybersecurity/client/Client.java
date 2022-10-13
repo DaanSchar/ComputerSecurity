@@ -106,8 +106,8 @@ public class Client implements Runnable {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-        Client client1 = new Client("config/configuration.json");
-        Client client2 = new Client("config/configuration2.json");
+        Client client1 = new Client("configs/configuration.json");
+        Client client2 = new Client("configs/configuration2.json");
 
         Thread client1Thread = new Thread(client1);
         Thread client2Thread = new Thread(client2);
