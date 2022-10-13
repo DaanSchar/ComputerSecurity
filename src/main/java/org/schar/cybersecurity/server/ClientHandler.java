@@ -39,6 +39,9 @@ public class ClientHandler implements Runnable {
                 while (true) {
                     try {
                         listenForUserActions();
+                    } catch (NumberFormatException e) {
+                        Logger.info("[Server] Error: " + e.getMessage());
+                        Logger.info("[Server] Ignoring this request");
                     } catch (Exception e) {
                         Logger.info("[Server] Client disconnected.");
                         logoutCurrentUser();
@@ -55,7 +58,7 @@ public class ClientHandler implements Runnable {
      * Logs the user in.
      *
      * @return True if a new user was created or if the same id is currently connected,
-     *         but uses the correct password.
+     * but uses the correct password.
      */
     private boolean loginUser(String id, String password) {
         if (Server.getUsers().containsKey(id)) {
@@ -82,7 +85,7 @@ public class ClientHandler implements Runnable {
     /**
      * Listens for any messages containing actions from the client-user.
      */
-    private void listenForUserActions() throws IOException {
+    private void listenForUserActions() throws IOException, NumberFormatException {
         JSONObject clientMsg = new JSONObject(buffReader.readLine());
 
         String[] actionAndAmount = clientMsg.getString("action").split(" ");
