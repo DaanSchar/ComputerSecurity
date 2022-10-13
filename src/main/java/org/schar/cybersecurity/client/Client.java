@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 public class Client implements Runnable {
 
-    private Socket socket;
     private final JSONObject configuration;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
@@ -24,7 +23,7 @@ public class Client implements Runnable {
     public void connect() throws IOException {
         String ip = configuration.getJSONObject("server").getString("ip");
         String port = configuration.getJSONObject("server").getString("port");
-        socket = new Socket(ip, Integer.parseInt(port));
+        Socket socket = new Socket(ip, Integer.parseInt(port));
         System.out.println("[Client] Starting client!");
         this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));

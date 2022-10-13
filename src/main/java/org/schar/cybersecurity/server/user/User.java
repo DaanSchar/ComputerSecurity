@@ -1,4 +1,4 @@
-package org.schar.cybersecurity.server;
+package org.schar.cybersecurity.server.user;
 
 public class User {
 
@@ -14,16 +14,17 @@ public class User {
         this.totalConnected = 1;
     }
 
+
+    public String getId() {
+        return id;
+    }
+
     public int getCount() {
         return count;
     }
 
     public String getPassword() {
         return password;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public int getTotalConnected() {
