@@ -21,7 +21,8 @@ only when all of them have been disconnected, will the data be deleted.
 
 ### Structure
 ![Image from geeksforgeeks](https://media.geeksforgeeks.org/wp-content/uploads/JavaSocketProgramming.png)\
-source: https://www.geeksforgeeks.org/
+source: https://www.geeksforgeeks.org/ \
+*Note*: actual implementation details may differ.
 
 
 
