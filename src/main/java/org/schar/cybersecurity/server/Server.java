@@ -15,7 +15,7 @@ public class Server {
         Logger.info("[Server] Starting server");
     }
 
-    public void start() throws IOException {
+    public void start() throws Exception {
         while (true) {
             Socket socket = serverSocket.accept();
             Logger.info("[Server] Client connected.");
@@ -24,12 +24,12 @@ public class Server {
         }
     }
 
-    private void handleClient(Socket socket) throws IOException {
+    private void handleClient(Socket socket) throws Exception {
         Thread clientHandlerThread = new Thread(new ClientHandler(socket));
         clientHandlerThread.start();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Server server = new Server(1234);
         server.start();
     }

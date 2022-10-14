@@ -1,6 +1,7 @@
 package org.schar.cybersecurity.server;
 
 import org.json.JSONObject;
+import org.schar.cybersecurity.common.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Logger;
 import org.schar.cybersecurity.server.user.CurrentUserController;
 
@@ -9,14 +10,13 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
 
-    private final BufferedReader buffReader;
-    private final BufferedWriter buffWriter;
     private final CurrentUserController userController;
     private String currentUserId;
 
-    public ClientHandler(Socket socket) throws IOException {
-        this.buffReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.buffWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+    private final EncryptedChannel channel;
+
+    public ClientHandler(Socket socket) throws Exception {
+        this.channel = new EncryptedChannel(socket);
         this.userController = new CurrentUserController();
     }
 
@@ -25,7 +25,9 @@ public class ClientHandler implements Runnable {
         Logger.info("[Server] Starting ClientHandler on a new thread.");
 
         try {
-            JSONObject clientMsg = new JSONObject(buffReader.readLine());
+            channel.establishSecureClientConnection();
+            JSONObject clientMsg = channel.receiveMessageJSON();
+
             String id = clientMsg.getString("id");
             String password = clientMsg.getString("password");
 
@@ -34,7 +36,7 @@ public class ClientHandler implements Runnable {
             if (loginUser(id, password)) {
 
                 try {
-                    sendMsg(new JSONObject().put("accept", true));
+                    channel.sendMessage(new JSONObject().put("accept", true));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -52,7 +54,7 @@ public class ClientHandler implements Runnable {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -88,8 +90,8 @@ public class ClientHandler implements Runnable {
     /**
      * Listens for any messages containing actions from the client-user.
      */
-    private void listenForUserActions() throws IOException, NumberFormatException {
-        JSONObject clientMsg = new JSONObject(buffReader.readLine());
+    private void listenForUserActions() throws Exception {
+        JSONObject clientMsg = channel.receiveMessageJSON();
 
         String[] actionAndAmount = clientMsg.getString("action").split(" ");
 
@@ -123,14 +125,5 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void sendMsg(JSONObject json) throws IOException {
-        sendMsg(json.toString());
-    }
-
-    private void sendMsg(String string) throws IOException {
-        buffWriter.write(string);
-        buffWriter.newLine();
-        buffWriter.flush();
-    }
 
 }

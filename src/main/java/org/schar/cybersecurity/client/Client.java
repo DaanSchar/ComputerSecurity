@@ -3,9 +3,9 @@ package org.schar.cybersecurity.client;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.schar.cybersecurity.common.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Utils;
 
-import java.io.*;
 import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,54 +13,10 @@ import java.util.regex.Pattern;
 public class Client implements Runnable {
 
     private final JSONObject configuration;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+    private EncryptedChannel channel;
 
-    public Client(String configuration) throws IOException, URISyntaxException {
+    public Client(String configuration) throws Exception {
         this.configuration = new JSONObject(Utils.readFile(Utils.getFile(configuration)));
-    }
-
-    public void connect() throws IOException {
-        String ip = configuration.getJSONObject("server").getString("ip");
-        String port = configuration.getJSONObject("server").getString("port");
-        Socket socket = new Socket(ip, Integer.parseInt(port));
-        System.out.println("[Client] Starting client!");
-        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-    }
-
-    public void sendUserInfo() throws IOException {
-        String id = configuration.getString("id");
-        String password = configuration.getString("password");
-
-        sendMessage(new JSONObject().put("id", id).put("password", password));
-    }
-
-    public void sendMessage(JSONObject json) throws IOException {
-        sendMessage(json.toString());
-    }
-
-    public void sendMessage(String message) throws IOException {
-        bufferedWriter.write(message);
-        bufferedWriter.newLine();
-        bufferedWriter.flush();
-    }
-
-    public void sendActions() throws IOException, JSONException {
-        JSONObject actions = (JSONObject) configuration.get("actions");
-        int delay = actions.getInt("delay");
-        JSONArray steps = actions.getJSONArray("steps");
-
-        for (int i = 0; i < steps.length(); i++) {
-            String action = steps.getString(i);
-
-            if (!isValidAction(action)) {
-                throw new JSONException("\"" + action +"\"" + " is not a valid action.");
-            }
-
-            sleep(delay);
-            sendMessage(new JSONObject().put("action", action));
-        }
     }
 
     @Override
@@ -69,22 +25,53 @@ public class Client implements Runnable {
             this.connect();
             this.sendUserInfo();
 
-            if (this.getResponse().getBoolean("accept")) {
+            if (channel.receiveMessageJSON().getBoolean("accept")) {
                 System.out.println("[Client] Logged in successfully!");
 
                 this.sendActions();
                 System.out.println("[Client] Done!");
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (JSONException e) {
             System.out.println("[Client] Configuration Error: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }
 
-    private JSONObject getResponse() throws IOException {
-        return new JSONObject(bufferedReader.readLine());
+    public void connect() throws Exception {
+        String ip = configuration.getJSONObject("server").getString("ip");
+        String port = configuration.getJSONObject("server").getString("port");
+        Socket socket = new Socket(ip, Integer.parseInt(port));
+
+        channel = new EncryptedChannel(socket);
+        channel.establishSecureServerConnection();
+
+        System.out.println("[Client] Starting client!");
+    }
+
+    public void sendUserInfo() throws Exception {
+        String id = configuration.getString("id");
+        String password = configuration.getString("password");
+
+        channel.sendMessage(new JSONObject().put("id", id).put("password", password));
+    }
+
+    public void sendActions() throws Exception {
+        JSONObject actions = (JSONObject) configuration.get("actions");
+        int delay = actions.getInt("delay");
+        JSONArray steps = actions.getJSONArray("steps");
+
+        for (int i = 0; i < steps.length(); i++) {
+            String action = steps.getString(i);
+
+            if (!isValidAction(action)) {
+                throw new JSONException("\"" + action + "\"" + " is not a valid action.");
+            }
+
+            sleep(delay);
+            channel.sendMessage(new JSONObject().put("action", action));
+        }
     }
 
     private void sleep(int time) {
@@ -105,7 +92,7 @@ public class Client implements Runnable {
         return matcher.find();
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         Client client1 = new Client("configs/configuration.json");
         Client client2 = new Client("configs/configuration2.json");
 
