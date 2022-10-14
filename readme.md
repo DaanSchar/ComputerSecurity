@@ -14,7 +14,8 @@ only when all of them have been disconnected, will the data be deleted.
 
 ### Features
 
-* The client can send messages to the server. They are read in the form of **json objects**.
+* The client can send messages to the server. They are read as **[Json](https://en.wikipedia.org/wiki/JSON) objects**.
+* packets are encrypted using [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)).
 * The server is able to handle multiple clients at a time by handling each client on a different thread.
 * Server logs are automatically written to `resources/logs/log.txt`. An example can be found in the same dir.
 
@@ -34,7 +35,7 @@ source: https://www.geeksforgeeks.org/ \
 ## Run
 Example of how to run the **Client** socket:
 ```
-public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
+public static void main(String[] args) throws Exception {
         Client client = new Client("config/configuration.json"); // files are found inside the "resources" dir.
         Thread clientThread = new Thread(client1); // we run the client as a thread so we can run multiple at a time.
         clientThread.start();
@@ -43,7 +44,7 @@ public static void main(String[] args) throws IOException, URISyntaxException, I
 
 To run the **Server** socket:
 ```
-public static void main(String[] args) throws IOException {
+public static void main(String[] args) throws Exception {
     Server server = new Server(1234); // pass in the port
     server.start();
 }
