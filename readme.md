@@ -35,7 +35,7 @@ source: https://www.geeksforgeeks.org/ \
 ## Run
 Example of how to run the **Client** socket:
 ```
-public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
+public static void main(String[] args) throws Exception {
         Client client = new Client("config/configuration.json"); // files are found inside the "resources" dir.
         Thread clientThread = new Thread(client1); // we run the client as a thread so we can run multiple at a time.
         clientThread.start();
@@ -44,7 +44,7 @@ public static void main(String[] args) throws IOException, URISyntaxException, I
 
 To run the **Server** socket:
 ```
-public static void main(String[] args) throws IOException {
+public static void main(String[] args) throws Exception {
     Server server = new Server(1234); // pass in the port
     server.start();
 }
