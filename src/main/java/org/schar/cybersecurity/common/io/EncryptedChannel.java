@@ -1,6 +1,7 @@
-package org.schar.cybersecurity.common;
+package org.schar.cybersecurity.common.io;
 
 import org.json.JSONObject;
+import org.schar.cybersecurity.common.Encryption;
 
 import java.net.Socket;
 import java.security.*;

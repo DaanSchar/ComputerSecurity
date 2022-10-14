@@ -1,4 +1,4 @@
-package org.schar.cybersecurity.common;
+package org.schar.cybersecurity.common.io;
 
 import org.json.JSONObject;
 

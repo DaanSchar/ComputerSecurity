@@ -3,7 +3,7 @@ package org.schar.cybersecurity.client;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.schar.cybersecurity.common.EncryptedChannel;
+import org.schar.cybersecurity.common.io.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Utils;
 
 import java.net.*;

@@ -1,7 +1,7 @@
 package org.schar.cybersecurity.server;
 
 import org.json.JSONObject;
-import org.schar.cybersecurity.common.EncryptedChannel;
+import org.schar.cybersecurity.common.io.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Logger;
 import org.schar.cybersecurity.server.user.CurrentUserController;
 
