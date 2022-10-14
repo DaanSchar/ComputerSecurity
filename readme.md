@@ -15,6 +15,7 @@ only when all of them have been disconnected, will the data be deleted.
 ### Features
 
 * The client can send messages to the server. They are read in the form of **json objects**.
+* packets are encrypted using [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem))
 * The server is able to handle multiple clients at a time by handling each client on a different thread.
 * Server logs are automatically written to `resources/logs/log.txt`. An example can be found in the same dir.
 
