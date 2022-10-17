@@ -36,7 +36,8 @@ public class Client implements Runnable {
         } catch (JSONException e) {
             System.out.println("[Client] Configuration Error: " + e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("[Client] " + e.getMessage());
+//            throw new RuntimeException(e);
         }
     }
 
