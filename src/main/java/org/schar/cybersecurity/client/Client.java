@@ -7,8 +7,6 @@ import org.schar.cybersecurity.common.io.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Utils;
 
 import java.net.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Client implements Runnable {
 
@@ -30,13 +28,14 @@ public class Client implements Runnable {
 
                 this.sendActions();
                 System.out.println("[Client] Done!");
+            } else {
+                System.out.println("[Client] Could not log in.");
             }
         } catch (JSONException e) {
             System.out.println("[Client] Configuration Error: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void connect() throws Exception {
@@ -65,12 +64,11 @@ public class Client implements Runnable {
         for (int i = 0; i < steps.length(); i++) {
             String action = steps.getString(i);
 
-            if (!isValidAction(action)) {
-                throw new JSONException("\"" + action + "\"" + " is not a valid action.");
-            }
-
             sleep(delay);
             channel.sendMessage(new JSONObject().put("action", action));
+
+            String response = channel.receiveMessageJSON().getString("message");
+            System.out.println("[Client] " + response);
         }
     }
 
@@ -79,17 +77,6 @@ public class Client implements Runnable {
         while (System.currentTimeMillis() - start < time * 1000L) {
             // wait until time of delay has passed
         }
-    }
-
-    private boolean isValidAction(String action) {
-        return regex(action, "increase [0-9]") || regex(action, "decrease [0-9]");
-    }
-
-    private boolean regex(String string, String regex) {
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(string);
-
-        return matcher.find();
     }
 
     public static void main(String[] args) throws Exception {

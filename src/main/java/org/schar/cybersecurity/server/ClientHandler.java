@@ -7,6 +7,8 @@ import org.schar.cybersecurity.server.user.CurrentUserController;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientHandler implements Runnable {
 
@@ -46,6 +48,7 @@ public class ClientHandler implements Runnable {
                         listenForUserActions();
                     } catch (NumberFormatException e) {
                         Logger.info("[Server] Error: " + e.getMessage());
+                        channel.sendMessage(new JSONObject().put("message", e.getMessage()));
                         Logger.info("[Server] Ignoring this request");
                     } catch (Exception e) {
                         Logger.info("[Server] Client disconnected.");
@@ -53,6 +56,8 @@ public class ClientHandler implements Runnable {
                         break;
                     }
                 }
+            } else {
+                channel.sendMessage(new JSONObject().put("accept", false));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -93,18 +98,28 @@ public class ClientHandler implements Runnable {
     private void listenForUserActions() throws Exception {
         JSONObject clientMsg = channel.receiveMessageJSON();
 
-        String[] actionAndAmount = clientMsg.getString("action").split(" ");
+        String action = clientMsg.getString("action");
 
-        String action = actionAndAmount[0];
-        int amount = Integer.parseInt(actionAndAmount[1]);
+        if (isValidAction(action)) {
+            String[] actionAndAmount = action.split(" ");
 
-        performUserAction(action, amount);
+            String actionType = actionAndAmount[0];
+            int amount = Integer.parseInt(actionAndAmount[1]);
+
+            if (amount == Integer.MAX_VALUE) {
+                channel.sendMessage(new JSONObject().put("message", "Value of action is too large."));
+            } else {
+                performUserAction(actionType, amount);
+            }
+        } else {
+            channel.sendMessage(new JSONObject().put("message", "Could not process invalid request '" + action + "'."));
+        }
     }
 
     /**
      * Performs the actions received from the verified client-user.
      */
-    private void performUserAction(String action, int amount) {
+    private void performUserAction(String action, int amount) throws Exception {
         Logger.info("[Server] %s performs action %s with amount: %d.", currentUserId, action, amount);
 
         if (action.equalsIgnoreCase("increase")) {
@@ -114,7 +129,19 @@ public class ClientHandler implements Runnable {
         }
 
         int newUserCount = userController.getUserCount(currentUserId);
+        channel.sendMessage(new JSONObject().put("message", "new count = " + newUserCount));
         Logger.info("[Server] new count of user %s = %d.", currentUserId, newUserCount);
+    }
+
+    private boolean isValidAction(String action) {
+        return regex(action, "increase [0-9]") || regex(action, "decrease [0-9]");
+    }
+
+    private boolean regex(String string, String regex) {
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(string);
+
+        return matcher.find();
     }
 
     private void logoutCurrentUser() {
