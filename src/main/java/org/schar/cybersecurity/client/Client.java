@@ -7,6 +7,8 @@ import org.schar.cybersecurity.common.io.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Utils;
 
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client implements Runnable {
 
@@ -64,11 +66,15 @@ public class Client implements Runnable {
         for (int i = 0; i < steps.length(); i++) {
             String action = steps.getString(i);
 
-            sleep(delay);
-            channel.sendMessage(new JSONObject().put("action", action));
+            if (action.length() <= 245) {
+                sleep(delay);
+                channel.sendMessage(new JSONObject().put("action", action));
 
-            String response = channel.receiveMessageJSON().getString("message");
-            System.out.println("[Client] " + response);
+                String response = channel.receiveMessageJSON().getString("message");
+                System.out.println("[Client] " + response);
+            } else {
+                System.out.println("[Client] Cannot process value exceeding 245 bytes");
+            }
         }
     }
 
@@ -88,6 +94,19 @@ public class Client implements Runnable {
         client1Thread.start();
         Thread.sleep(100);
         client2Thread.start();
+//
+//        List<Thread> threads = new ArrayList<>();
+//
+//        for (int i = 0; i < 10; i++) {
+//            Client client = new Client("configs/configuration.json");
+//            Thread thread = new Thread(client);
+//            threads.add(thread);
+//        }
+//
+//        for (Thread thread : threads) {
+//            thread.start();
+//            Thread.sleep(50);
+//        }
     }
 
 }
