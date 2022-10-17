@@ -84,7 +84,7 @@ public class ClientHandler implements Runnable {
             return false;
         }
 
-        Logger.info("[Server] Creating new user %s with password %s.", id, password);
+        Logger.info("[Server] Creating new user %s.", id);
 
         currentUserId = id;
         userController.addNewUser(id, password);
