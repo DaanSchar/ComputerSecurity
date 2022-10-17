@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable {
                         listenForUserActions();
                     } catch (NumberFormatException e) {
                         Logger.info("[Server] Error: " + e.getMessage());
-                        channel.sendMessage(new JSONObject().put("message", e.getMessage()));
+                        channel.sendMessage(new JSONObject().put("message", "Error: " + e.getMessage()));
                         Logger.info("[Server] Ignoring this request");
                     } catch (Exception e) {
                         Logger.info("[Server] Client disconnected.");
@@ -106,7 +106,7 @@ public class ClientHandler implements Runnable {
             String actionType = actionAndAmount[0];
             int amount = Integer.parseInt(actionAndAmount[1]);
 
-            if (amount == Integer.MAX_VALUE) {
+            if (amount >= userController.maxValue()) {
                 channel.sendMessage(new JSONObject().put("message", "Value of action is too large."));
             } else {
                 performUserAction(actionType, amount);
@@ -129,8 +129,17 @@ public class ClientHandler implements Runnable {
         }
 
         int newUserCount = userController.getUserCount(currentUserId);
-        channel.sendMessage(new JSONObject().put("message", "new count = " + newUserCount));
-        Logger.info("[Server] new count of user %s = %d.", currentUserId, newUserCount);
+
+        if (newUserCount > userController.maxValue()) {
+            userController.setCount(currentUserId, userController.maxValue());
+            channel.sendMessage(new JSONObject().put(
+                    "message",
+                    "User count cannot exceed " + userController.maxValue() + "Capping count to " + userController.maxValue())
+            );
+        } else {
+            channel.sendMessage(new JSONObject().put("message", "new count = " + newUserCount));
+            Logger.info("[Server] new count of user %s = %d.", currentUserId, newUserCount);
+        }
     }
 
     private boolean isValidAction(String action) {

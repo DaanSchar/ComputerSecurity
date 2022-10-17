@@ -57,4 +57,12 @@ public class CurrentUserController {
     public int getTotalConnectionsOfUser(String id) {
         return getUser(id).getTotalConnected();
     }
+
+    public void setCount(String id, int count) {
+        getUser(id).setCount(count);
+    }
+
+    public int maxValue() {
+        return User.MAX_VALUE;
+    }
 }

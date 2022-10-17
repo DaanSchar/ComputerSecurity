@@ -6,6 +6,7 @@ public class User {
     private final String id;
     private int count;
     private int totalConnected;
+    public static final int MAX_VALUE = 1000000;
 
     public User(String id, String password) {
         this.id = id;
@@ -13,7 +14,6 @@ public class User {
         this.count = 0;
         this.totalConnected = 1;
     }
-
 
     public String getId() {
         return id;
@@ -49,5 +49,9 @@ public class User {
 
     public boolean isDisconnected() {
         return this.totalConnected <= 0;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
