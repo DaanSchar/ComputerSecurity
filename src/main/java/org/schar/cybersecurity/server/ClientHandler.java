@@ -5,7 +5,6 @@ import org.schar.cybersecurity.common.io.EncryptedChannel;
 import org.schar.cybersecurity.common.io.Logger;
 import org.schar.cybersecurity.server.user.CurrentUserController;
 
-import java.io.*;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,12 +35,7 @@ public class ClientHandler implements Runnable {
             Logger.info("[Server] Identified user with id: %s and password: %s.", id, password);
 
             if (loginUser(id, password)) {
-
-                try {
-                    channel.sendMessage(new JSONObject().put("accept", true));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                channel.sendMessage(new JSONObject().put("accept", true));
 
                 while (true) {
                     try {
@@ -71,6 +65,10 @@ public class ClientHandler implements Runnable {
      * but uses the correct password.
      */
     private boolean loginUser(String id, String password) {
+        if (id.equals("") || password.equals("")) {
+            return false;
+        }
+
         if (userController.userCurrentlyExists(id)) {
             if (userController.userHasValidPassword(id, password)) {
                 Logger.info("[Server] Logging in user %s", id);
